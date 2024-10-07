@@ -33,3 +33,11 @@ exit
  64  kill -9 13411
 ##the below command will show that the container is in down state
    67  docker ps -a
+##container networking
+  74  docker ps
+   75  docker inspect 679
+   76  docker ps
+   77  docker inspect cf8
+   78  docker network ls
+#this will show that the contianer are running with different ip
+   79  docker network inspect bridge
