@@ -2,3 +2,6 @@
   docker --version
   systemctl status docker
   ##press q to come out
+##lets create our first container
+  23  docker container run --publish 80:80 --detach nginx
+   24  docker ps
