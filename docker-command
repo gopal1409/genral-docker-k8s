@@ -41,3 +41,16 @@ exit
    78  docker network ls
 #this will show that the contianer are running with different ip
    79  docker network inspect bridge
+##expose port should be always unique
+#this will not work as a previous container is already running on port 81
+docker ps
+     84  docker run -p 81:80 -d httpd
+#lets create few more container 
+   85  docker run -d httpd
+ 85  docker run -d httpd
+
+ 85  docker run -d httpd
+###the below command will show all the three container running on same port as they are internal
+   86  docker ps
+   87  docker network ls
+   88  docker network inspect bridge
