@@ -1,0 +1,4 @@
+##verify the docker is working or not 
+  docker --version
+  systemctl status docker
+  ##press q to come out
