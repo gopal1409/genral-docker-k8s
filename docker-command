@@ -54,3 +54,12 @@ docker ps
    86  docker ps
    87  docker network ls
    88  docker network inspect bridge
+##create a custom network create two container inside the custom network
+117  docker network create myapp_network
+  118  docker run -d --name new_nginx --network myapp_network nginx:alpine
+  119  docker run -d --name old_nginx --network myapp_network nginx:alpine
+#check both the contianer are in same network or not
+  123  docker network inspect myapp_network
+
+  120  docker exec -it new_nginx curl old_nginx
+  121  docker exec -it old_nginx curl new_nginx
