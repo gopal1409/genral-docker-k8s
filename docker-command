@@ -89,3 +89,8 @@ exit
 ls
 ##you will see the new db
 
+#lets update the container 
+ 146  docker stop db
+  147  docker rm db
+  148  docker container run -d --name db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql:9.0.1
+  149  docker ps
