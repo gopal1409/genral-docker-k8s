@@ -7,3 +7,16 @@ sudo -i
 docker
   23  docker container run --publish 80:80 --detach nginx
    24  docker ps
+##lets create a db container
+
+  41  docker container run -d -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql
+   42  docker ps
+   #we will login inside the cotnainer using exec it means interactive terminal
+   44  docker exec -it 67936849a4b8 bash
+###once you login 
+mysql -u root -p
+##just press enter 
+show databases;
+##to exit
+exit 
+exit
