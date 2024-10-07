@@ -69,7 +69,7 @@ docker ps
   132  docker exec -it db bash
 mysql -u root -p
 create database general;
-show database general;
+show databases general;
 exit
 exit
 ###############lets see where did this database is created 
