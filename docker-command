@@ -63,3 +63,29 @@ docker ps
 
   120  docker exec -it new_nginx curl old_nginx
   121  docker exec -it old_nginx curl new_nginx
+#volumes in mysql 
+  130  docker container run -d --name db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql:9
+  131  docker ps
+  132  docker exec -it db bash
+mysql -u root -p
+create database general;
+show database general;
+exit
+exit
+###############lets see where did this database is created 
+ 134  docker volume ls
+  135  docker volume inspect mysql-db
+  136  cd /var/lib/docker/volumes/mysql-db/_data
+  137  ls
+###this will show the general db
+  138  docker exec -it db bash
+##login again and check the database
+mysql -u root -p
+#####create a new database
+create database testdb;
+exit
+exit
+##do ls 
+ls
+##you will see the new db
+
