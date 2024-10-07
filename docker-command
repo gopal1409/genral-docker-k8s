@@ -20,3 +20,5 @@ show databases;
 ##to exit
 exit 
 exit
+##withought detach we will create a container
+ docker container run --publish 82:80 nginx
