@@ -14,4 +14,9 @@ kubectl get nodes
 #this will show all my contianer of the master machine whcih is running as contianer only
   261  crictl ps
   262  crictl images
-
+##in the master machine we need to generate a join command take the output and put the same in the worker node
+ kubeadm token create --print-join-command
+###take the output paste it in the worker node
+####you need to go back to the master terminal
+kubectl get nodes
+kubectl get nodes -o wide
