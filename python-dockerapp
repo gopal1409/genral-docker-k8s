@@ -1,0 +1,44 @@
+###clone this application
+cd ..
+git clone https://github.com/gopal1409/flask-app.git
+cd flask-app
+#####lets create the docker file
+nano dockerfile
+#################################
+FROM python:3.11-alpine
+
+# Set up environment variables for Python
+
+
+# Create and set the working directory
+WORKDIR /app
+
+# Copy only the requirements file first to leverage Docker caching
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire application code
+COPY . .
+
+# Expose the port your application will run on
+EXPOSE 8080
+
+# Specify the command to run on container start
+CMD ["python", "src/app.py"]
+
+####save the file using ctrl x y and enter
+##lets create a new file
+nano  requirements.txt
+#######inside the file we will add the flask requirement
+flask==2.3.2
+##############################save the file using ctrl x y and enter
+##lets build the image
+ 223  docker build -t pythonapp .
+#this will run the image
+  224  docker run -d -p 81:8080 pythonapp
+####
+curl localhost:81
+##you can see the output
+
