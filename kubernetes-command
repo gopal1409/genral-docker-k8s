@@ -1,2 +1,17 @@
 ###lets check the node status
 kubectl get nodes
+#this will give you more information about the nodes
+  248  kubectl get nodes -o wide
+  ##all the master machine component you can seee
+  250  kubectl get pod -A
+##this will show the kubelet status
+  251  systemctl status kubelet
+
+##to check all the pod are running as container
+#docker will not work
+  260  docker ps
+##we will use crio engine
+#this will show all my contianer of the master machine whcih is running as contianer only
+  261  crictl ps
+  262  crictl images
+
