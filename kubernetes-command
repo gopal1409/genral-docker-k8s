@@ -1,0 +1,2 @@
+###lets check the node status
+kubectl get nodes
