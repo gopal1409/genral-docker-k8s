@@ -18,3 +18,24 @@ sudo -i
     ##chang ethe dns name to your DNS name
     http://lab-as-9463.lc.cl-labs.springpeople.com:8080/hello
 ##press Ctrl C
+#how to convert this app into an container based image
+root@ip-172-31-116-255:~/spring-hello# ls
+README.md  pom.xml  src  target
+root@ip-172-31-116-255:~/spring-hello#
+###to convert the applocation into an container based images
+ 177  nano dockerfile
+####inside the dockerfile provide this instruction
+FROM openjdk:16
+VOLUME /tmp
+EXPOSE 8080
+COPY ./target/spring-boot-2-hello-world-1.0.2-SNAPSHOT.jar webdemo.jar
+ENTRYPOINT ["java","-jar","webdemo.jar"]
+###to save the file ctrl x press y and enter
+  178  docker build -t appserver .
+####this will create an image
+lets build an container out of this image
+ 186  docker run -d -p 80:8080 appserver
+  187  docker ps
+#3verify the image beahve as it is liek we run in traditional way
+  189  curl localhost/hello
+
