@@ -17,3 +17,4 @@ sudo -i
 ######copy the dns in the browser with port 8080 you can access the applciation
     ##chang ethe dns name to your DNS name
     http://lab-as-9463.lc.cl-labs.springpeople.com:8080/hello
+##press Ctrl C
