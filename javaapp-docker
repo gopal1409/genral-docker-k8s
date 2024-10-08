@@ -1,0 +1,18 @@
+  155  apt install default-jdk
+  156  apt install maven
+    ##after installing all the package
+    ##we will cone an application
+  157  git clone https://github.com/gopal1409/spring-hello.git
+  158  cd spring-hello/
+    ##mvn clean package will convert the application into an runnable object
+  159  mvn clean package
+  160  ls
+  161  cd target/
+  162  ls
+    #using java jar we are going to execute the application
+  163  java -jar spring-boot-2-hello-world-1.0.2-SNAPSHOT.jar
+    
+  164  cd ..
+######copy the dns in the browser with port 8080 you can access the applciation
+    ##chang ethe dns name to your DNS name
+    http://lab-as-9463.lc.cl-labs.springpeople.com:8080/hello
