@@ -49,3 +49,19 @@
   394  kubectl rollout undo deployment my-first-deployment --to-revision=2
 #@#we will update one more time the images
  409  kubectl set image deployment my-first-deployment nginx=gopal1409/sysapp
+##autoscaling in k8s
+root@ip-172-31-116-255:~/flask-app# kubectl scale deploy my-first-deployment --replicas=5
+deployment.apps/my-first-deployment scaled
+root@ip-172-31-116-255:~/flask-app# kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+my-first-deployment   4/5     5            4           166m
+root@ip-172-31-116-255:~/flask-app# kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+my-first-deployment   5/5     5            5           167m
+root@ip-172-31-116-255:~/flask-app# kubectl autoscale deploy my-first-deployment --min=5 --max=10 --cpu-percent=80
+horizontalpodautoscaler.autoscaling/my-first-deployment autoscaled
+root@ip-172-31-116-255:~/flask-app# kubectl get hpa
+NAME                  REFERENCE                        TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+my-first-deployment   Deployment/my-first-deployment   cpu: <unknown>/80%   5         10        5          16s
+root@ip-172-31-116-255:~/flask-app#
+
