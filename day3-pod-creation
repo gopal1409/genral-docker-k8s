@@ -1,0 +1,32 @@
+####first login in the master machin 
+  sudo -i
+286  kubectl get nodes
+  #this will show both the nodes are in ready state
+  #lets create our first pod using dry run
+  288  kubectl run my-first-pod --image=nginx --dry-run=client -o yaml
+  ##export the pod defination in a file
+  289  kubectl run my-first-pod --image=nginx --dry-run=client -o yaml > pod.yml
+  290  ls
+  291  cat pod.yml
+  ##to create the pod 
+  292  kubectl apply -f pod.yml
+  ##this will show that pod is created
+  293  kubectl get pod
+  ##to get more information about the pod 
+  294  kubectl describe pod my-first-pod
+##lets replace the image to our own custom image whcih we have created yeasterday
+ 303  kubectl run my-app --image=gopal1409/pythonapp --dry-run=client -o yaml > pod.yml
+  304  cat pod.yml
+  305  kubectl apply -f pod.yml
+  306  kubectl get pod
+ 
+  309  kubectl describe pod my-app
+
+#lets create the service
+ 313  kubectl get pod
+  314  kubectl expose pod my-first-pod --type=NodePort --port=80 --name=my-first-service --dry-run=client -o yaml
+  315  kubectl expose pod my-first-pod --type=NodePort --port=80 --name=my-first-service --dry-run=client -o yaml > service.yml
+  316  kubectl apply -f service.yml
+###this will show the port number in thirt thousand series copy the second macchine DNS name and paste in the browser colod the port number
+  317  kubectl get svc
+
