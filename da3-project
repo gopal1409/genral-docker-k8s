@@ -165,7 +165,7 @@ spec:
             claimName: task-pv-claim
         - name: userdb-script 
           configMap:
-            claimName: usermanagement-dbcreation-script
+            name: usermanagement-dbcreation-script
 ###apply the mysql deployment
 root@ip-172-31-116-255:~# kubectl apply -f mysql.yml
 deployment.apps/mysql created
