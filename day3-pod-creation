@@ -14,3 +14,10 @@
   293  kubectl get pod
   ##to get more information about the pod 
   294  kubectl describe pod my-first-pod
+##lets replace the image to our own custom image whcih we have created yeasterday
+ 303  kubectl run my-app --image=gopal1409/pythonapp --dry-run=client -o yaml > pod.yml
+  304  cat pod.yml
+  305  kubectl apply -f pod.yml
+  306  kubectl get pod
+ 
+  309  kubectl describe pod my-app
