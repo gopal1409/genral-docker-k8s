@@ -1,0 +1,8 @@
+##lets create our first deployment
+332  kubectl create deployment my-first-deployment --image=nginx --port=80 --dry-run=client -o yaml > deploy.yml
+  333  cat deploy.yml
+  ##then apply it
+    335  kubectl apply -f deploy.yml
+  336  kubectl get deploy
+  337  kubectl get rs
+  338  kubectl get pod
