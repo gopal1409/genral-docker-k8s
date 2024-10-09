@@ -6,3 +6,17 @@
   336  kubectl get deploy
   337  kubectl get rs
   338  kubectl get pod
+####
+  345  nano deploy.yml
+##change the replicas to 2
+  346  kubectl apply -f deploy.yml
+#now the deployment will show that you have two pod
+  347  kubectl get deploy
+  348  kubectl get rs
+  349  kubectl get pod
+#lets delete one of the pod change the pod as per your 
+  350  kubectl delete pod my-first-deployment-5df6974956-2wtjs
+  351  kubectl get pod
+  352  kubectl describe deploy my-first-deployment
+  353  kubectl get rs
+  354  kubectl describe rs my-first-deployment-5df6974956
