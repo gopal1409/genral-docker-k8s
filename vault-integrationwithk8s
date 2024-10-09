@@ -1,0 +1,89 @@
+
+#####how to install docker
+260  sudo apt-get update
+  261  sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+  262  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  263  sudo apt-get update
+  263.1 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  263.2 apt-get update
+  264  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  265  docker --version
+  266  systemctl status docker
+  ####how to install kind as kubernetes
+   268  curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.15.0/kind-linux-amd64
+  269  chmod +x ./kind
+  270  sudo mv ./kind /usr/local/bin/kind
+  271  kind create cluster
+  272  kubectl cluster-info --context kind-kind
+  ####the above command will not find kubectl command utiility we need to install the same
+  273  sudo apt-get update
+  274  sudo apt-get install -y ca-certificates curl
+  275  sudo apt-get install -y apt-transport-https
+  276  echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  277  sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  278  sudo apt-get update
+  279  sudo apt-get install -y kubectl
+  280  kubectl get nodes
+  281  kubectl get pod
+  282  kubectl get pod --all-namespaces
+###we will create a secret in vault username and password. 
+ 286  vault write secrets/creds/kube username=giraffe password=salsa
+  287  vault kv get -format=json secrets/creds/kube | jq
+  ######deploy the pod in kubernetes with your vault address
+  292  nano devwebapp.yml
+  #####inside devwebaapp.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: devwebapp
+  labels:
+    app: devwebapp
+spec:
+  serviceAccountName: internal-app
+  containers:
+    - name: app
+      image: burtlo/devwebapp-ruby:k8s
+      env:
+        - name: VAULT_ADDR
+        #change the vault ip to your ip
+          value: "http://3.236.175.226:8200"
+        - name: VAULT_TOKEN
+          value: root
+#####create a service account and apply the pod manifest
+ 291  kubectl create sa internal-app
+305  kubectl apply -f devwebapp.yml
+#####to verify the running pod
+294  kubectl get pod
+  295  kubectl describe pod devwebapp
+####deploy a service and endpoint to address an external vault. 
+313  nano external-vault.yml
+#####inside external vault.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-vault
+  namespace: default
+spec:
+
+  ports:
+  - protocol: TCP
+    port: 8200
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: external-vault
+subsets:
+  - addresses:
+  #change the ip address to your vault. 
+      - ip: 3.236.175.226
+    ports:
+      - port: 8200
+  #######apply the above manifest
+  314  kubectl apply -f external-vault.yml
+  #####finally we will verify from the dev pod(container) which is running inside kubernetes cluster
+   317  kubectl exec devwebapp -- curl -s http://3.236.175.226:8200/v1/sys/seal-status
+  318  kubectl exec devwebapp -- curl -s http://3.236.175.226:8200/v1/sys/seal-status | jq
+
+
+
