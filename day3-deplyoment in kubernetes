@@ -28,3 +28,7 @@
   369  kubectl get svc
 #the dexscribe svc wiull show all the endpoint that is the ip address of all your pod
   370  kubectl describe svc my-first-deploy-service
+##lets update the image
+ 380  kubectl set image deployment my-first-deployment nginx=nulldevil/phpsysinfo
+  381  kubectl get pod
+  382  kubectl get rs
