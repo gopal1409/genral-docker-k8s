@@ -66,3 +66,30 @@ task-pv-claim   Bound    task-pv-volume   10Gi       RWO                        
 root@ip-172-31-116-255:~# kubectl get pv
 NAME             CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
 task-pv-volume   10Gi       RWO            Retain           Bound    default/task-pv-claim                  <unset>                          17m
+
+
+#lets add the secret
+root@ip-172-31-116-255:~# nano secret.yml
+apiVersion: v1 
+kind: Secret 
+metadata:
+  name: mysql-db-password
+type: opaque #the store the secret in jumble format
+data:
+  db-password: ZGJwYXNzd29yZDEx
+root@ip-172-31-116-255:~# kubectl apply -f secret.yml
+secret/mysql-db-password created
+root@ip-172-31-116-255:~# kubectl get secret
+NAME                TYPE     DATA   AGE
+mysql-db-password   opaque   1      4s
+root@ip-172-31-116-255:~# kubectl describe secret mysql-db-password
+Name:         mysql-db-password
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  opaque
+
+Data
+====
+db-password:  12 bytes
