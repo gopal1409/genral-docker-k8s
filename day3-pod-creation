@@ -1,0 +1,16 @@
+####first login in the master machin 
+  sudo -i
+286  kubectl get nodes
+  #this will show both the nodes are in ready state
+  #lets create our first pod using dry run
+  288  kubectl run my-first-pod --image=nginx --dry-run=client -o yaml
+  ##export the pod defination in a file
+  289  kubectl run my-first-pod --image=nginx --dry-run=client -o yaml > pod.yml
+  290  ls
+  291  cat pod.yml
+  ##to create the pod 
+  292  kubectl apply -f pod.yml
+  ##this will show that pod is created
+  293  kubectl get pod
+  ##to get more information about the pod 
+  294  kubectl describe pod my-first-pod
