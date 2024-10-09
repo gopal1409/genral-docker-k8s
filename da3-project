@@ -106,3 +106,102 @@ data:
   474  kubectl apply -f configmap.yml
   475  kubectl get configmap
   476  kubectl describe configmap usermanagement-dbcreation-script
+
+#lets update the configmap
+nano configmap.yml
+######delete the provisou content and paste it
+apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: usermanagement-dbcreation-script
+data:
+  mysql_usermgmt.sql: |-
+    DROP DATABASE IF EXISTS webappdb;
+    CREATE DATABASE webappdb;
+####then reapply it
+root@ip-172-31-116-255:~# kubectl apply -f configmap.yml
+configmap/usermanagement-dbcreation-script configured
+####lets create teh mysql deployment file
+nano mysql.yml
+##################################################
+#pvc configmap secret
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-db-password
+                key: db-password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - name: mysql-volume #this is the name of the volume
+            mountPath: /var/lib/mysql
+          - name: userdb-script 
+            mountPath: /docker-entrypoint-initdb.d
+      volumes: 
+        - name: mysql-volume
+          persistentVolumeClaim:
+            claimName: task-pv-claim
+        - name: userdb-script 
+          configMap:
+            claimName: usermanagement-dbcreation-script
+###apply the mysql deployment
+root@ip-172-31-116-255:~# kubectl apply -f mysql.yml
+deployment.apps/mysql created
+root@ip-172-31-116-255:~#
+root@ip-172-31-116-255:~# kubectl get pod
+NAME                                  READY   STATUS    RESTARTS   AGE
+my-app                                1/1     Running   0          6h28m
+my-first-deployment-c4889f976-44l8p   1/1     Running   0          124m
+my-first-deployment-c4889f976-6qhlc   1/1     Running   0          124m
+my-first-deployment-c4889f976-cbbjs   1/1     Running   0          132m
+my-first-deployment-c4889f976-pc7w7   1/1     Running   0          132m
+my-first-deployment-c4889f976-xtx6b   1/1     Running   0          124m
+mysql-64f6f85d95-j2zhl                1/1   
+##your pod id an mine will be different
+##we need to login inside the pod to verify
+root@ip-172-31-116-255:~# kubectl exec -it mysql-64f6f85d95-j2zhl -- /bin/bash
+root@mysql-64f6f85d95-j2zhl:/# mysql -u root -p
+Enter password:
+###the password will be dbpassword11
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> create database webapp;
+Query OK, 1 row affected (0.00 sec)
+
+###once you create the db 
+exit
+exit
+#######
+we will go to node machine
+cd /mnt/data
+ls -l
