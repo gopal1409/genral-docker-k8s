@@ -34,3 +34,16 @@
   382  kubectl get rs
   385  kubectl rollout status deployment my-first-deployment
   388  kubectl describe deploy my-first-deployment
+##rolling update
+#this will show the rollout historyu
+ 390  kubectl rollout history deployment my-first-deployment
+#if you want to get more details about the rollout history
+#after this refresh the page
+  391  kubectl rollout history deployment my-first-deployment --revision=2
+#after this refresh the page
+
+  392  kubectl rollout history deployment my-first-deployment --revision=1
+##undo will do viceversa after this 
+  393  kubectl rollout undo deployment my-first-deployment
+##if you want to go to a particular release
+  394  kubectl rollout undo deployment my-first-deployment --to-revision=2
