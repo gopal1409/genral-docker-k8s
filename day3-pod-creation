@@ -21,3 +21,12 @@
   306  kubectl get pod
  
   309  kubectl describe pod my-app
+
+#lets create the service
+ 313  kubectl get pod
+  314  kubectl expose pod my-first-pod --type=NodePort --port=80 --name=my-first-service --dry-run=client -o yaml
+  315  kubectl expose pod my-first-pod --type=NodePort --port=80 --name=my-first-service --dry-run=client -o yaml > service.yml
+  316  kubectl apply -f service.yml
+###this will show the port number in thirt thousand series copy the second macchine DNS name and paste in the browser colod the port number
+  317  kubectl get svc
+
