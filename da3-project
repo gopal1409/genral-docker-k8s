@@ -44,3 +44,25 @@ Source:
     Path:          /mnt/data
     HostPathType:
 Events:            <none>
+##lets create the pvc
+root@ip-172-31-116-255:~# nano pvc.yml
+########################pvc defination
+apiVersion: v1 
+kind: PersistentVolumeClaim
+metadata:
+  name: task-pv-claim
+spec:
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem #so that it will detect which file system NTFS ZFS ext
+  accessModes:
+    - ReadWriteOnce 
+root@ip-172-31-116-255:~# kubectl apply -f pvc.yml
+persistentvolumeclaim/task-pv-claim created
+root@ip-172-31-116-255:~# kubectl get pvc
+NAME            STATUS   VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+task-pv-claim   Bound    task-pv-volume   10Gi       RWO                           <unset>                 9s
+root@ip-172-31-116-255:~# kubectl get pv
+NAME             CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                   STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+task-pv-volume   10Gi       RWO            Retain           Bound    default/task-pv-claim                  <unset>                          17m
