@@ -47,3 +47,5 @@
   393  kubectl rollout undo deployment my-first-deployment
 ##if you want to go to a particular release
   394  kubectl rollout undo deployment my-first-deployment --to-revision=2
+#@#we will update one more time the images
+ 409  kubectl set image deployment my-first-deployment nginx=gopal1409/sysapp
