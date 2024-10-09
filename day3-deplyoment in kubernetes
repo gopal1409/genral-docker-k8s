@@ -32,3 +32,5 @@
  380  kubectl set image deployment my-first-deployment nginx=nulldevil/phpsysinfo
   381  kubectl get pod
   382  kubectl get rs
+  385  kubectl rollout status deployment my-first-deployment
+  388  kubectl describe deploy my-first-deployment
