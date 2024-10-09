@@ -20,3 +20,11 @@
   352  kubectl describe deploy my-first-deployment
   353  kubectl get rs
   354  kubectl describe rs my-first-deployment-5df6974956
+#lets expose the deployment 
+ 366  kubectl get pod -o wide
+##check the ip address
+
+  368  kubectl expose deployment my-first-deployment --type=NodePort --port=80 --name=my-first-deploy-service
+  369  kubectl get svc
+#the dexscribe svc wiull show all the endpoint that is the ip address of all your pod
+  370  kubectl describe svc my-first-deploy-service
