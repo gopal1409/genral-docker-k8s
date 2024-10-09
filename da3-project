@@ -93,3 +93,16 @@ Type:  opaque
 Data
 ====
 db-password:  12 bytes
+###lets create a configmap
+  473  nano configmap.yml
+apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: usermanagement-dbcreation-script
+data:
+  mysql_usermgmt.sql: |-
+    DROP DATABASE IF EXIST webappdb;
+    CREATE DATABASE webappdb;
+  474  kubectl apply -f configmap.yml
+  475  kubectl get configmap
+  476  kubectl describe configmap usermanagement-dbcreation-script
