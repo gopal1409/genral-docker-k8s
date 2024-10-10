@@ -29,8 +29,9 @@ Version: 1.30.4-1.1
   682  apt-get install kubeadm=1.30.5-1.1
   683  apt-get install kubectl=1.30.5-1.1 kubelet=1.30.5-1.1
 ###then apply it
-  kubectl upgrade plan
-  kubectl upgrade apply 1.30.5
+  686  kubeadm upgrade plan
+  687  kubeadm upgrade apply 1.30.5
+
   ####
   service kubelet restart
   ####uncordon 
