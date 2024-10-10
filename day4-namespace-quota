@@ -1,0 +1,26 @@
+@###lets check what are the namespace you have
+  sudo -i
+    511  kubectl get nodes
+  512  kubectl get ns
+  ##this will give you all the namespace
+  513  kubectl get pod -A
+  #########lets create a namespace
+  root@ip-172-31-116-255:~# kubectl create ns dev
+namespace/dev created
+root@ip-172-31-116-255:~# kubectl get ns
+NAME              STATUS   AGE
+default           Active   41h
+dev               Active   5s
+kube-node-lease   Active   41h
+kube-public       Active   41h
+kube-system       Active   41h
+root@ip-172-31-116-255:~# kubectl describe ns dev
+Name:         dev
+Labels:       kubernetes.io/metadata.name=dev
+Annotations:  <none>
+Status:       Active
+
+No resource quota.
+
+No LimitRange resource.
+
