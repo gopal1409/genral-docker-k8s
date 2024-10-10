@@ -1,0 +1,37 @@
+#####upgrade the master node
+  root@ip-172-31-116-255:~# kubectl get nodes
+NAME                STATUS   ROLES           AGE    VERSION
+ip-172-31-116-255   Ready    control-plane   2d1h   v1.30.3
+ip-172-31-117-25    Ready    <none>          2d     v1.30.5
+root@ip-172-31-116-255:~# kubectl drain ip-172-31-116-255 --ignore-daemonsets --delete-emptydir-data
+node/ip-172-31-116-255 cordoned
+Warning: ignoring DaemonSet-managed Pods: kube-system/canal-xpm9z, kube-system/kube-proxy-krbgm
+evicting pod kube-system/coredns-7db6d8ff4d-6bz8q
+evicting pod kube-system/calico-kube-controllers-75bdb5b75d-8vg2t
+evicting pod kube-system/coredns-7db6d8ff4d-694lm
+pod/calico-kube-controllers-75bdb5b75d-8vg2t evicted
+pod/coredns-7db6d8ff4d-6bz8q evicted
+pod/coredns-7db6d8ff4d-694lm evicted
+node/ip-172-31-116-255 drained
+root@ip-172-31-116-255:~# kubectl get nodes
+NAME                STATUS                     ROLES           AGE    VERSION
+ip-172-31-116-255   Ready,SchedulingDisabled   control-plane   2d1h   v1.30.3
+ip-172-31-117-25    Ready                      <none>          2d     v1.30.5
+root@ip-172-31-116-255:~#
+#####once done 
+  root@ip-172-31-116-255:~# apt-cache show kubeadm | grep 1.30
+Version: 1.30.5-1.1
+Depends: cri-tools (>= 1.30.0)
+Filename: amd64/kubeadm_1.30.5-1.1_amd64.deb
+Version: 1.30.4-1.1
+#################
+    681  apt-mark hold kubectl kubelet
+  682  apt-get install kubeadm=1.30.5-1.1
+  683  apt-get install kubectl=1.30.5-1.1 kubelet=1.30.5-1.1
+###then apply it
+  kubectl upgrade plan
+  kubectl upgrade apply 1.30.5
+  ####
+  service kubelet restart
+  ####uncordon 
+  kubectl uncordon ip-172-31-116-255
