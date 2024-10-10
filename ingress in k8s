@@ -1,0 +1,11 @@
+##lets deplyo the ingress 
+  618  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
+  619  kubectl get pod -A
+##check the ingress node port number copy the second machine ip 
+  621  kubectl get svc -A
+###now we will create two pod and two service
+ 624  kubectl run cart --image=nginx
+  625  kubectl run payment --image=httpd
+  626  kubectl expose pod cart --port=80 --name=cartservice
+
+  628  kubectl expose pod payment --port=80 --name=paymentservice
