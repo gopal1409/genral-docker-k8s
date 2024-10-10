@@ -16,7 +16,7 @@ NAME                STATUS                     ROLES           AGE   VERSION
 ip-172-31-116-255   Ready                      control-plane   2d    v1.30.3
 ip-172-31-117-25    Ready,SchedulingDisabled   <none>          2d    v1.30.3
 
-  ####then we need to login inside the node machine
+  ####then we need to login inside the worker node machine
  ssh lab-user@lab-as-9489.lc.cl-labs.springpeople.com
   ###once login
   sudo -i
