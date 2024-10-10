@@ -32,3 +32,116 @@ my-first-service          NodePort    10.101.89.210   <none>        80:30795/TCP
 postgres                  ClusterIP   None            <none>        5432/TCP       4s
 root@ip-172-31-116-255:~#
 
+##lets create the postgress db
+nano pg.yml
+###############################
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+  clusterIP: None
+  selector:
+    app: postgres
+###deploy the postgresssql
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+        - name: postgres-init
+          image: postgres:latest
+          command:
+          - bash
+          - "-c"
+          - |
+            set -ex
+            [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+            ordinal=${BASH_REMATCH[1]}
+            if [[ $ordinal -eq 0 ]]; then
+              printf "I am the primary"
+            else
+              printf "I am a read-only replica"
+            fi
+      containers:
+        - name: postgres
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          ports:
+          - name: postgres
+            containerPort: 5432
+          livenessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "pg_isready --host $POD_IP"
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - "pg_isready --host $POD_IP"
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "local-path"
+      resources:
+        requests:
+          storage: 1Gi
+##apply it 
+kubectl apply -f pg.yml
+##############################################
+  588  kubectl get statefulset
+#this will give you three pod which are in number
+ 590  kubectl get pod
+##against that it will create three volumes also
+  591  kubectl get pvc
+
+###if you loging to the second machine
+[sudo] password for lab-user:
+root@ip-172-31-117-25:~# cd /opt
+root@ip-172-31-117-25:/opt# ls
+cni  containerd  google  local-path-provisioner
+root@ip-172-31-117-25:/opt# cd local-path-provisioner/
+root@ip-172-31-117-25:/opt/local-path-provisioner# ls
+pvc-294d8bb6-9391-4aed-8e1e-ffe7d77d8310_default_data-postgres-1  pvc-ec467f50-4f84-4cb3-93f2-8ffeae1ab49d_default_data-postgres-2
+pvc-b66e8221-5814-4b2f-b046-b1d0efdbc7d6_default_data-postgres-0
+root@ip-172-31-117-25:/opt/local-path-provisioner#
+
