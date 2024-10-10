@@ -167,4 +167,12 @@ I am a read-only replica++ hostname
 + [[ 2 -eq 0 ]]
 + printf 'I am a read-only replica'
 root@ip-172-31-116-255:~#
+##change teh replicas to 4
+ 611  kubectl edit statefulset postgres
+##save the file with press esc :wq
+  612  kubectl get statefulset
+  613  kubectl get pod
+  614  kubectl get pvc
+  615  kubectl delete pod postgres-1
+  616  kubectl get pod
 
