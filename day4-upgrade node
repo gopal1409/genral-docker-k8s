@@ -1,0 +1,52 @@
+drain the worker node node
+  ###############
+  kubectl get nodes
+  root@ip-172-31-116-255:~# kubectl get nodes
+NAME                STATUS                     ROLES           AGE   VERSION
+ip-172-31-116-255   Ready                      control-plane   2d    v1.30.3
+ip-172-31-117-25    Ready,SchedulingDisabled   <none>          2d    v1.30.3
+
+  ##change the node name 
+  647  kubectl drain ip-172-31-117-25 --ignore-daemonsets --delete-emptydir-data
+  648  kubectl drain ip-172-31-117-25 --ignore-daemonsets --delete-emptydir-data --force
+
+  ####once drain  now the node status will show scheduling is disabled
+  root@ip-172-31-116-255:~# kubectl get nodes
+NAME                STATUS                     ROLES           AGE   VERSION
+ip-172-31-116-255   Ready                      control-plane   2d    v1.30.3
+ip-172-31-117-25    Ready,SchedulingDisabled   <none>          2d    v1.30.3
+
+  ####then we need to login inside the node machine
+ ssh lab-user@lab-as-9489.lc.cl-labs.springpeople.com
+  ###once login
+  sudo -i
+     8  apt-get update
+  #this command will show the latest version of k8s
+    9  apt-cache show kubeadm
+   10  apt-cache show kubeadm |  grep 1.30
+   11  apt-mark hold kubectl kubelet
+   12  apt-get install kubeadm=1.30.5-1.1
+   13  apt-get install kubectl=1.30.5-1.1 kubelet=1.30.5-1.1
+   14  apt-mark unhold kubelet kubectl
+   15  systemctl restart kubelet
+   16  systemctl status kubelet
+  exit
+  exit
+  
+#####once you are in master machine
+ 654  kubectl get nodes
+  ##below command will show that your node upgrade to 1.30.5 version
+  655  kubectl get nodes -o wide
+##run this command this will update all the certificate in master machine for the worke node
+  657  kubeadm upgrade node
+  658  kubectl get pod
+  659  kubectl get nodes
+  ##uncordon it so that shceduleing will be enabled
+  660  kubectl uncordon ip-172-31-117-25
+  661  kubectl get nodes
+  662  kubectl get pod
+
+
+
+
+
