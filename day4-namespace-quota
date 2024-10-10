@@ -135,3 +135,5 @@ spec:
   @#######
 root@ip-172-31-116-255:~# kubectl apply -f pod2.yml
 Error from server (Forbidden): error when creating "pod2.yml": pods "pod2" is forbidden: exceeded quota: mem-cpu-demo, requested: requests.memory=700Mi, used: requests.memory=600Mi, limited: requests.memory=1Gi
+###how to install metrics server
+https://github.com/gopal1409/CKA_feb24/blob/main/autoscaling-metricsserver
