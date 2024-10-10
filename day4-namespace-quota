@@ -24,3 +24,112 @@ No resource quota.
 
 No LimitRange resource.
 
+##lets add the quota
+nano quota.yml
+########
+apiVersion: v1 
+kind: ResourceQuota 
+metadata:
+  name: mem-cpu-demo
+  namespace: dev
+spec:
+  hard:
+    requests.cpu: "1" #every pod cannot consume more than 1 core processor
+    requests.memory: 1Gi #every pod cannot consume more than 1Gi ram
+    limits.cpu: "2" #the max limit of cpu is 2 core
+    limits.memory: 2Gi #max memory limit is 2gi
+
+    ##for every pod in the name each contianer must have a memory request memory limits cpu request and 
+    #cpu limits
+###after adding the quota you can see the same
+root@ip-172-31-116-255:~# kubectl describe ns dev
+Name:         dev
+Labels:       kubernetes.io/metadata.name=dev
+Annotations:  <none>
+Status:       Active
+
+Resource Quotas
+  Name:            mem-cpu-demo
+  Resource         Used  Hard
+  --------         ---   ---
+  limits.cpu       0     2
+  limits.memory    0     2Gi
+  requests.cpu     0     1
+  requests.memory  0     1Gi
+
+###lets create a pod which can use this quota
+nano pod1.yml
+##################################
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: my-app
+  name: pod1
+  namespace: dev
+spec:
+  containers:
+  - image: nginx 
+    name: my-app
+    resources: 
+      limits: 
+        memory: "800Mi" #800 mb #but this pod will not consume more than 800mb of ram
+        cpu: "800m" #millicore
+      requests: 
+        memory: "600Mi" #this pod will run with 600Mb of ram
+        cpu: "400m"
+  ##################################
+root@ip-172-31-116-255:~# kubectl get pod
+NAME                                  READY   STATUS    RESTARTS      AGE
+my-app                                1/1     Running   1 (58m ago)   24h
+my-first-deployment-c4889f976-44l8p   1/1     Running   1 (58m ago)   19h
+my-first-deployment-c4889f976-6qhlc   1/1     Running   1 (58m ago)   19h
+my-first-deployment-c4889f976-cbbjs   1/1     Running   1 (58m ago)   19h
+my-first-deployment-c4889f976-pc7w7   1/1     Running   1 (58m ago)   19h
+my-first-deployment-c4889f976-xtx6b   1/1     Running   1 (58m ago)   19h
+mysql-64f6f85d95-j2zhl                1/1     Running   1 (58m ago)   17h
+root@ip-172-31-116-255:~# kubectl get pod -n dev
+NAME   READY   STATUS    RESTARTS   AGE
+pod1   1/1     Running   0          15s
+root@ip-172-31-116-255:~# kubectl describe ns dev
+Name:         dev
+Labels:       kubernetes.io/metadata.name=dev
+Annotations:  <none>
+Status:       Active
+
+Resource Quotas
+  Name:            mem-cpu-demo
+  Resource         Used   Hard
+  --------         ---    ---
+  limits.cpu       800m   2
+  limits.memory    800Mi  2Gi
+  requests.cpu     400m   1
+  requests.memory  600Mi  1Gi
+
+No LimitRange resource.
+###lets create another pod with more mem request
+nano pod2.yml
+#########################################
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: my-app
+  name: pod2
+  namespace: dev
+spec:
+  containers:
+  - image: nginx 
+    name: my-app
+    resources: 
+      limits: 
+        memory: "1Gi" #800 mb #but this pod will not consume more than 800mb of ram
+        cpu: "800m" #millicore
+      requests: 
+        memory: "700Mi" #this pod will run with 600Mb of ram
+        cpu: "400m"
+  @#######
+root@ip-172-31-116-255:~# kubectl apply -f pod2.yml
+Error from server (Forbidden): error when creating "pod2.yml": pods "pod2" is forbidden: exceeded quota: mem-cpu-demo, requested: requests.memory=700Mi, used: requests.memory=600Mi, limited: requests.memory=1Gi
