@@ -147,7 +147,7 @@ pvc-294d8bb6-9391-4aed-8e1e-ffe7d77d8310_default_data-postgres-1  pvc-ec467f50-4
 pvc-b66e8221-5814-4b2f-b046-b1d0efdbc7d6_default_data-postgres-0
 root@ip-172-31-117-25:/opt/local-path-provisioner#
 ##lets check the logs from init contianer for specific postgress db
-ngest=0.002 s, average=0.001 s; distance=269 kB, estimate=269 kB; lsn=0/15286B8, redo lsn=0/1528660
+kubectl logs postgres-0
 root@ip-172-31-116-255:~# kubectl logs postgres-0 -c postgres-init
 ++ hostname
 + [[ postgres-0 =~ -([0-9]+)$ ]]
