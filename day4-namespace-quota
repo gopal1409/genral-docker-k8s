@@ -42,6 +42,8 @@ spec:
     ##for every pod in the name each contianer must have a memory request memory limits cpu request and 
     #cpu limits
 ###after adding the quota you can see the same
+###apply it
+kubectl apply -f quota.yml
 root@ip-172-31-116-255:~# kubectl describe ns dev
 Name:         dev
 Labels:       kubernetes.io/metadata.name=dev
