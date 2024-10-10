@@ -6,3 +6,29 @@ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisione
   root@ip-172-31-116-255:~# kubectl get sc
 NAME         PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 local-path   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  15s
+#headless service is always required to create a stateful set 
+root@ip-172-31-116-255:~# nano postgres-service.yml
+
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: postgres 
+  labels:
+    app: postgres
+spec:
+  ports:
+    - name: postgres 
+      port: 5432
+  clusterIP: None #we want to resolve the pod defination using healdless using dns name of the pod
+  selector:
+    app: postgres
+root@ip-172-31-116-255:~# kubectl apply -f postgres-service.yml
+service/postgres created
+root@ip-172-31-116-255:~# kubectl get svc
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes                ClusterIP   10.96.0.1       <none>        443/TCP        43h
+my-first-deploy-service   NodePort    10.111.67.200   <none>        80:31193/TCP   23h
+my-first-service          NodePort    10.101.89.210   <none>        80:30795/TCP   25h
+postgres                  ClusterIP   None            <none>        5432/TCP       4s
+root@ip-172-31-116-255:~#
+
